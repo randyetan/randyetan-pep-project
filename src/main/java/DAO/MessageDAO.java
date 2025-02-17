@@ -9,7 +9,7 @@ import Util.ConnectionUtil;
 
 public class MessageDAO {
 
-    public Message createMessage(int posted_by, String message_text, int time_posted_epoch) { 
+    public Message createMessage(int posted_by, String message_text, long time_posted_epoch) { 
         /*
         create table message (
         message_id int primary key auto_increment,
@@ -26,12 +26,12 @@ public class MessageDAO {
             
             ps.setInt(1, posted_by);
             ps.setString(2, message_text);
-            ps.setInt(3, time_posted_epoch);
+            ps.setLong(3, time_posted_epoch);
             ps.executeUpdate();
             ResultSet pkeyResultSet = ps.getGeneratedKeys();
             if(pkeyResultSet.next()){
-                int generated_account_id = (int) pkeyResultSet.getLong(1);
-                return new Message(generated_account_id, posted_by, message_text, time_posted_epoch);
+                int generated_message_id = (int) pkeyResultSet.getLong(1);
+                return new Message(generated_message_id, posted_by, message_text, time_posted_epoch);
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -49,14 +49,14 @@ public class MessageDAO {
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 messages.add(new Message(rs.getInt("message_id"), rs.getInt("posted_by"),
-                rs.getString("message_text"), rs.getInt("time_posted_epoch")));
+                rs.getString("message_text"), rs.getLong("time_posted_epoch")));
             } 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return messages;
     }
-    public Message getMessageByID(int message_id) { 
+    public Message getMessageById(int message_id) { 
         Connection connection = ConnectionUtil.getConnection();
         try {
             String sql = "SELECT * FROM message WHERE message_id = ?";
@@ -66,7 +66,7 @@ public class MessageDAO {
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 return new Message(rs.getInt("message_id"), rs.getInt("posted_by"),
-                rs.getString("message_text"), rs.getInt("time_posted_epoch"));
+                rs.getString("message_text"), rs.getLong("time_posted_epoch"));
             } 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -74,7 +74,7 @@ public class MessageDAO {
         return null;
     }
     
-    public boolean deleteMessageByID(int message_id) { 
+    public boolean deleteMessageById(int message_id) { 
         Connection connection = ConnectionUtil.getConnection();
         try {
             String sql = "DELETE FROM message WHERE message_id = ?";
@@ -116,7 +116,7 @@ public class MessageDAO {
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 messages.add(new Message(rs.getInt("message_id"), rs.getInt("posted_by"),
-                rs.getString("message_text"), rs.getInt("time_posted_epoch")));
+                rs.getString("message_text"), rs.getLong("time_posted_epoch")));
             } 
         } catch (SQLException e) {
             System.out.println(e.getMessage());

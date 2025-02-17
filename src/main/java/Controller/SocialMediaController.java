@@ -1,5 +1,7 @@
 package Controller;
 
+import Service.AccountService;
+import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -9,6 +11,14 @@ import io.javalin.http.Context;
  * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
  */
 public class SocialMediaController {
+    AccountService accountService;
+    MessageService messageService;
+
+    public SocialMediaController() {
+        this.accountService = new AccountService(); 
+        this.messageService = new MessageService(); 
+    }
+
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
@@ -39,18 +49,34 @@ public class SocialMediaController {
 
         
         Javalin app = Javalin.create();
-        app.get("example-endpoint", this::exampleHandler);
+        // app.get("example-endpoint", this::exampleHandler);
 
+        // create a new Account on the endpoint POST localhost:8080/register
+        app.post("/register", this::registrationHandler);
+        // verify my login on the endpoint POST localhost:8080/login
+        app.post("/login", this::loginHandler);
+        // submit a new post on the endpoint POST localhost:8080/messages
+        app.post("/messages", this::createMessageHandler);
+        // submit a GET request on the endpoint GET localhost:8080/messages
+        app.get("/messages", this::getAllMessagesHandler);
+        // submit a GET request on the endpoint GET localhost:8080/messages/{message_id}
+        app.get("/messages/{message_id}", this::getMessageByIdHandler);
+        // submit a DELETE request on the endpoint DELETE localhost:8080/messages/{message_id}
+        app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
+        // submit a PATCH request on the endpoint PATCH localhost:8080/messages/{message_id}
+        app.patch("/messages/{message_id}", this::updateMessageHandler);
+        // submit a GET request on the endpoint GET localhost:8080/accounts/{account_id}/messages
+        app.get("/accounts/{account_id}/messages", this::getMessagesByUserIdHandler);
         return app;
     }
 
-    /**
-     * This is an example handler for an example endpoint.
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
-    private void exampleHandler(Context context) {
-        context.json("sample text");
-    }
+    // /**
+    //  * This is an example handler for an example endpoint.
+    //  * @param context The Javalin Context object manages information about both the HTTP request and response.
+    //  */
+    // private void exampleHandler(Context context) {
+    //     context.json("sample text");
+    // }
 
 
 }

@@ -61,20 +61,5 @@ public class AccountDAO {
         }
         return null;
     }
-
-    public boolean updateAccountPassword(int account_id, String password) {
-        Connection connection = ConnectionUtil.getConnection();
-        try {
-            String sql = "UPDATE account SET password = ? WHERE account_id = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, password);
-            ps.setInt(2, account_id);
-            
-            int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
-    }
+    
 }
