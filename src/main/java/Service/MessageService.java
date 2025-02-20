@@ -16,7 +16,7 @@ public class MessageService {
         accountDAO = new AccountDAO();
     }
 
-    public Message createMessage(int posted_by, String message_text, int time_posted_epoch) {
+    public Message createMessage(int posted_by, String message_text, long time_posted_epoch) {
         // Create New Message
         // As a user, I should be able to submit a new post on the endpoint POST localhost:8080/messages. 
         // The request body will contain a JSON representation of a message, which should be persisted to the 
